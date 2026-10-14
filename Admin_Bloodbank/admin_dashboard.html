@@ -1,0 +1,1772 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Admin Dashboard - BloodLink</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/admin_dashboard.css') }}">
+
+</head>
+
+
+<body>
+
+<div class="dashboard-container">
+
+
+    <!-- =====================================================
+         SIDEBAR
+    ====================================================== -->
+
+    <aside class="sidebar">
+
+
+        <!-- LOGO -->
+
+        <div class="logo-section">
+
+            <div class="logo-icon">
+                🩸
+            </div>
+
+            <div>
+
+                <h2>BloodLink</h2>
+
+                <span>Admin Portal</span>
+
+            </div>
+
+        </div>
+
+
+        <!-- MAIN NAVIGATION -->
+
+        <div class="nav-section">
+
+            <p class="nav-title">
+                MAIN
+            </p>
+
+
+            <button class="nav-item active"
+                    onclick="showSection('dashboard', this)">
+
+                <span class="nav-icon">▦</span>
+
+                <span>
+                    Dashboard
+                </span>
+
+            </button>
+
+
+            <button class="nav-item"
+                    onclick="showSection('users', this)">
+
+                <span class="nav-icon">👥</span>
+
+                <span>
+                    User Management
+                </span>
+
+            </button>
+
+
+            <button class="nav-item"
+                    onclick="showSection('bloodbanks', this)">
+
+                <span class="nav-icon">🩸</span>
+
+                <span>
+                    Blood Banks
+                </span>
+
+            </button>
+
+
+            <button class="nav-item"
+                    onclick="showSection('hospitals', this)">
+
+                <span class="nav-icon">🏥</span>
+
+                <span>
+                    Hospitals
+                </span>
+
+            </button>
+
+
+            <button class="nav-item"
+                    onclick="showSection('activity', this)">
+
+                <span class="nav-icon">📋</span>
+
+                <span>
+                    System Activity
+                </span>
+
+            </button>
+
+
+            <button class="nav-item"
+                    onclick="showSection('reports', this)">
+
+                <span class="nav-icon">📊</span>
+
+                <span>
+                    Reports
+                </span>
+
+            </button>
+
+        </div>
+
+
+        <!-- ACCOUNT -->
+
+        <div class="nav-section">
+
+            <p class="nav-title">
+                ACCOUNT
+            </p>
+
+
+            <button class="nav-item"
+                    onclick="showSection('profile', this)">
+
+                <span class="nav-icon">👤</span>
+
+                <span>
+                    Profile
+                </span>
+
+            </button>
+
+
+            <button class="nav-item"
+                    onclick="showSection('settings', this)">
+
+                <span class="nav-icon">⚙</span>
+
+                <span>
+                    Settings
+                </span>
+
+            </button>
+
+        </div>
+
+
+        <!-- LOGOUT -->
+
+        <div class="sidebar-bottom">
+
+            <a href="{{ url_for('auth.logout') }}"
+               class="logout-button">
+
+                <span class="nav-icon">
+                    ↪
+                </span>
+
+                <span>
+                    Logout
+                </span>
+
+            </a>
+
+        </div>
+
+    </aside>
+
+
+    <!-- =====================================================
+         MAIN CONTENT
+    ====================================================== -->
+
+    <main class="main-content">
+
+
+        <!-- TOP BAR -->
+
+        <header class="topbar">
+
+
+            <div class="search-container">
+
+                <span class="search-icon">
+                    ⌕
+                </span>
+
+                <input type="text"
+                       id="globalSearch"
+                       placeholder="Search...">
+
+            </div>
+
+
+            <div class="topbar-right">
+
+
+                <button class="notification-button">
+
+                    🔔
+
+                    <span class="notification-dot"></span>
+
+                </button>
+
+
+                <div class="user-profile">
+
+
+                    <div class="user-avatar">
+                        AD
+                    </div>
+
+
+                    <div class="user-details">
+
+                        <strong>
+                            {{ session.get('name', 'Administrator') }}
+                        </strong>
+
+                        <span>
+                            Administrator
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <!-- =====================================================
+             DASHBOARD
+        ====================================================== -->
+
+        <section id="dashboard"
+                 class="page-section active-section">
+
+
+            <div class="page-header">
+
+
+                <div>
+
+                    <h1>
+                        Welcome, {{ session.get('name', 'Administrator') }} 👋
+                    </h1>
+
+                    <p>
+                        Here's an overview of the BloodLink system.
+                    </p>
+
+                </div>
+
+
+                <div class="date-display">
+                    📅 Today
+                </div>
+
+            </div>
+
+
+            <!-- SUMMARY CARDS -->
+
+            <div class="summary-grid">
+
+
+                <div class="summary-card">
+
+                    <div class="card-icon blue">
+                        👥
+                    </div>
+
+                    <div class="card-content">
+
+                        <span>
+                            Total Users
+                        </span>
+
+                        <h2>
+                            {{ total_users }}
+                        </h2>
+
+                        <small>
+                            Registered users
+                        </small>
+
+                    </div>
+
+                </div>
+
+
+                <div class="summary-card">
+
+                    <div class="card-icon green">
+                        🩸
+                    </div>
+
+                    <div class="card-content">
+
+                        <span>
+                            Blood Banks
+                        </span>
+
+                        <h2>
+                            {{ total_banks }}
+                        </h2>
+
+                        <small>
+                            Registered blood banks
+                        </small>
+
+                    </div>
+
+                </div>
+
+
+                <div class="summary-card">
+
+                    <div class="card-icon orange">
+                        🏥
+                    </div>
+
+                    <div class="card-content">
+
+                        <span>
+                            Hospitals
+                        </span>
+
+                        <h2>
+                            {{ total_hospitals }}
+                        </h2>
+
+                        <small>
+                            Registered hospitals
+                        </small>
+
+                    </div>
+
+                </div>
+
+
+                <div class="summary-card">
+
+                    <div class="card-icon purple">
+                        🩸
+                    </div>
+
+                    <div class="card-content">
+
+                        <span>
+                            Blood Units
+                        </span>
+
+                        <h2>
+                            {{ current_units }}
+                        </h2>
+
+                        <small>
+                            Across blood banks
+                        </small>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- SECONDARY SUMMARY -->
+
+            <div class="mini-summary-grid">
+
+
+                <div class="mini-card">
+
+                    <div class="mini-icon">
+                        👤
+                    </div>
+
+                    <div>
+
+                        <span>
+                            Donors
+                        </span>
+
+                        <strong>
+                            {{ total_donors }}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <div class="mini-card">
+
+                    <div class="mini-icon orange-icon">
+                        ⏳
+                    </div>
+
+                    <div>
+
+                        <span>
+                            Pending Requests
+                        </span>
+
+                        <strong>
+                            {{ pending_requests }}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <div class="mini-card">
+
+                    <div class="mini-icon green-icon">
+                        ✓
+                    </div>
+
+                    <div>
+
+                        <span>
+                            Active Users
+                        </span>
+
+                        <strong>
+                            {{ active_users }}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <div class="mini-card">
+
+                    <div class="mini-icon red-icon">
+                        ⚠
+                    </div>
+
+                    <div>
+
+                        <span>
+                            Pending Verification
+                        </span>
+
+                        <strong>
+                            {{ pending_verifications }}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- DASHBOARD LOWER GRID -->
+
+            <div class="dashboard-grid">
+
+
+                <!-- RECENT USERS -->
+
+                <div class="content-card large-card">
+
+
+                    <div class="card-header">
+
+                        <div>
+
+                            <h2>
+                                Recent Users
+                            </h2>
+
+                            <p>
+                                Latest registered users
+                            </p>
+
+                        </div>
+
+
+                        <button class="view-button"
+                                onclick="showSection('users')">
+
+                            View All
+
+                        </button>
+
+                    </div>
+
+
+                    <div class="table-container">
+
+
+                        <table>
+
+                            <thead>
+
+                                <tr>
+
+                                    <th>
+                                        User ID
+                                    </th>
+
+                                    <th>
+                                        Name
+                                    </th>
+
+                                    <th>
+                                        Role
+                                    </th>
+
+                                    <th>
+                                        Email
+                                    </th>
+
+                                    <th>
+                                        Status
+                                    </th>
+
+                                </tr>
+
+                            </thead>
+
+
+                            <tbody>{% for user in users[:5] %}<tr><td>{{ user.user_id }}</td><td>{{ user.full_name }}</td><td>{{ {'BloodBankStaff':'Blood Bank Staff','HospitalStaff':'Hospital Staff'}.get(user.role,user.role) }}</td><td>{{ user.email }}</td><td><span class="status-badge {{ 'success' if user.status == 'Active' else 'warning' }}">{{ user.status }}</span></td></tr>{% else %}<tr><td colspan="5">No users found.</td></tr>{% endfor %}</tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+
+                <!-- SYSTEM ALERTS -->
+
+                <div class="content-card">
+
+
+                    <div class="card-header">
+
+                        <div>
+
+                            <h2>
+                                System Alerts
+                            </h2>
+
+                            <p>
+                                Items requiring attention
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="alert-list">
+
+
+                        <div class="alert-item">
+
+                            <div class="alert-icon red-alert">
+                                !
+                            </div>
+
+                            <div class="alert-info">
+
+                                <strong>
+                                    Expired Available Units
+                                </strong>
+
+                                <span>
+                                    {{ expired_units }} blood units are past expiry
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="alert-item">
+
+                            <div class="alert-icon orange-alert">
+                                !
+                            </div>
+
+                            <div class="alert-info">
+
+                                <strong>
+                                    Pending Requests
+                                </strong>
+
+                                <span>
+                                    {{ pending_requests }} hospital requests pending
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="alert-item">
+
+                            <div class="alert-icon blue-alert">
+                                👤
+                            </div>
+
+                            <div class="alert-info">
+
+                                <strong>
+                                    New Registrations
+                                </strong>
+
+                                <span>
+                                    {{ new_users_today }} users registered today
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                    </div>
+
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             USER MANAGEMENT
+        ====================================================== -->
+
+        <section id="users"
+                 class="page-section">
+
+
+            <div class="page-header">
+
+                <div>
+
+                    <h1>
+                        User Management
+                    </h1>
+
+                    <p>
+                        Manage BloodLink users and account status.
+                    </p>
+
+                </div>
+
+
+                <button class="primary-button"
+                        onclick="openAddUserModal()">
+
+                    + Add User
+
+                </button>
+
+            </div>
+
+
+            <div class="content-card">
+
+
+                <div class="card-header">
+
+
+                    <div>
+
+                        <h2>
+                            All Users
+                        </h2>
+
+                        <p>
+                            Registered BloodLink users
+                        </p>
+
+                    </div>
+
+
+                    <div class="filter-container">
+
+                        <select id="roleFilter"
+                                onchange="filterUsers()">
+
+                            <option value="all">
+                                All Roles
+                            </option>
+
+                            <option value="Donor">
+                                Donor
+                            </option>
+
+                            <option value="HospitalStaff">
+                                Hospital Staff
+                            </option>
+
+                            <option value="BloodBankStaff">
+                                Blood Bank Staff
+                            </option>
+
+                            <option value="Admin">
+                                Admin
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+
+                <div class="table-container">
+
+
+                    <table id="usersTable">
+
+                        <thead>
+
+                            <tr>
+
+                                <th>
+                                    User ID
+                                </th>
+
+                                <th>
+                                    Name
+                                </th>
+
+                                <th>
+                                    Email
+                                </th>
+
+                                <th>
+                                    Role
+                                </th>
+
+                                <th>
+                                    Phone
+                                </th>
+
+                                <th>
+                                    Status
+                                </th>
+
+                                <th>
+                                    Action
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody>{% for user in users %}
+<tr data-user-id="{{ user.user_id }}">
+<td>{{ user.user_id }}</td><td>{{ user.full_name }}</td><td>{{ user.email }}</td>
+<td data-role="{{ user.role }}">{{ {'BloodBankStaff':'Blood Bank Staff','HospitalStaff':'Hospital Staff'}.get(user.role, user.role) }}</td>
+<td>{{ user.phone }}</td><td><span class="status-badge {{ 'success' if user.status == 'Active' else 'warning' }}">{{ user.status }}</span></td>
+<td><button class="small-button" onclick="toggleUserStatus(this)">{{ 'Deactivate' if user.status == 'Active' else 'Activate' }}</button></td>
+</tr>
+{% else %}<tr><td colspan="7">No users found.</td></tr>{% endfor %}</tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             BLOOD BANKS
+        ====================================================== -->
+
+        <section id="bloodbanks"
+                 class="page-section">
+
+
+            <div class="page-header">
+
+                <div>
+
+                    <h1>
+                        Blood Banks
+                    </h1>
+
+                    <p>
+                        Monitor registered blood banks.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="content-card">
+
+
+                <div class="card-header">
+
+                    <div>
+
+                        <h2>
+                            Registered Blood Banks
+                        </h2>
+
+                        <p>
+                            Blood banks connected to BloodLink
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="table-container">
+
+
+                    <table>
+
+                        <thead>
+
+                            <tr>
+
+                                <th>
+                                    Blood Bank ID
+                                </th>
+
+                                <th>
+                                    Blood Bank
+                                </th>
+
+                                <th>
+                                    Location
+                                </th>
+
+                                <th>
+                                    Staff
+                                </th>
+
+                                <th>
+                                    Available Units
+                                </th>
+
+                                <th>
+                                    Bank Type
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody>{% for bank in bank_rows %}<tr><td>{{ bank.BankID }}</td><td>{{ bank.BankName }}</td><td>{{ bank.District }}</td><td>{{ bank.staff_count }}</td><td>{{ bank.available_units }}</td><td>{{ bank.BankType }}</td></tr>{% else %}<tr><td colspan="6">No blood banks found.</td></tr>{% endfor %}</tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             HOSPITALS
+        ====================================================== -->
+
+        <section id="hospitals"
+                 class="page-section">
+
+
+            <div class="page-header">
+
+                <div>
+
+                    <h1>
+                        Hospitals
+                    </h1>
+
+                    <p>
+                        Monitor registered hospitals and their activity.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="content-card">
+
+
+                <div class="card-header">
+
+                    <div>
+
+                        <h2>
+                            Registered Hospitals
+                        </h2>
+
+                        <p>
+                            Hospitals using BloodLink
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="table-container">
+
+
+                    <table>
+
+                        <thead>
+
+                            <tr>
+
+                                <th>
+                                    Hospital ID
+                                </th>
+
+                                <th>
+                                    Hospital
+                                </th>
+
+                                <th>
+                                    Location
+                                </th>
+
+                                <th>
+                                    Staff
+                                </th>
+
+                                <th>
+                                    Requests
+                                </th>
+
+                                <th>
+                                    Pending Requests
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody>{% for hospital in hospital_rows %}<tr><td>{{ hospital.hospital_id }}</td><td>{{ hospital.hospital_name }}</td><td>{{ hospital.district }}</td><td>{{ hospital.staff_count }}</td><td>{{ hospital.request_count }}</td><td>{{ hospital.pending_count }}</td></tr>{% else %}<tr><td colspan="6">No hospitals found.</td></tr>{% endfor %}</tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             SYSTEM ACTIVITY
+        ====================================================== -->
+
+        <section id="activity"
+                 class="page-section">
+
+
+            <div class="page-header">
+
+                <div>
+
+                    <h1>
+                        System Activity
+                    </h1>
+
+                    <p>
+                        Monitor important activities across BloodLink.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="content-card">
+
+
+                <div class="card-header">
+
+                    <div>
+
+                        <h2>
+                            Recent Activity
+                        </h2>
+
+                        <p>
+                            Latest system events
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="activity-list">{% for event in activity %}<div class="activity-item"><div class="activity-icon blue-activity">•</div><div class="activity-content"><strong>{{ event.event_title }}</strong><span>{{ event.event_description }}</span><small>{{ event.event_date.strftime('%d %b %Y') if event.event_date else '—' }}</small></div></div>{% else %}<p>No recorded activity is available.</p>{% endfor %}</div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             REPORTS
+        ====================================================== -->
+
+        <section id="reports"
+                 class="page-section">
+
+
+            <div class="page-header">
+
+                <div>
+
+                    <h1>
+                        Reports
+                    </h1>
+
+                    <p>
+                        System-wide BloodLink statistics.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="report-grid">
+
+
+                <div class="report-card">
+
+                    <div class="report-icon blue">
+                        👥
+                    </div>
+
+                    <div>
+
+                        <span>
+                            Total Users
+                        </span>
+
+                        <strong>
+                            {{ total_users }}
+                        </strong>
+
+                        <small>
+                            Registered users
+                        </small>
+
+                    </div>
+
+                </div>
+
+
+                <div class="report-card">
+
+                    <div class="report-icon red">
+                        🩸
+                    </div>
+
+                    <div>
+
+                        <span>
+                            Completed Donations
+                        </span>
+
+                        <strong>
+                            {{ total_donations }}
+                        </strong>
+
+                        <small>
+                            Successful donor records
+                        </small>
+
+                    </div>
+
+                </div>
+
+
+                <div class="report-card">
+
+                    <div class="report-icon green">
+                        ✓
+                    </div>
+
+                    <div>
+
+                        <span>
+                            Allocations
+                        </span>
+
+                        <strong>
+                            {{ total_allocations }}
+                        </strong>
+
+                        <small>
+                            Completed allocations
+                        </small>
+
+                    </div>
+
+                </div>
+
+
+                <div class="report-card">
+
+                    <div class="report-icon orange">
+                        🏥
+                    </div>
+
+                    <div>
+
+                        <span>
+                            Blood Requests
+                        </span>
+
+                        <strong>
+                            {{ total_requests }}
+                        </strong>
+
+                        <small>
+                            Total requests
+                        </small>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="content-card report-table-card">
+
+
+                <div class="card-header">
+
+                    <div>
+
+                        <h2>
+                            Blood Group Activity
+                        </h2>
+
+                        <p>
+                            System-wide blood activity
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="table-container">
+
+
+                    <table>
+
+                        <thead>
+
+                            <tr>
+
+                                <th>
+                                    Blood Group
+                                </th>
+
+                                <th>
+                                    Completed Donations
+                                </th>
+
+                                <th>
+                                    Requests
+                                </th>
+
+                                <th>
+                                    Allocations
+                                </th>
+
+                                <th>
+                                    Current Units
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody>{% for item in blood_group_activity %}<tr><td><span class="blood-badge">{{ item.blood_group }}</span></td><td>{{ item.donations }}</td><td>{{ item.requests }}</td><td>{{ item.allocations }}</td><td>{{ item.current_units }}</td></tr>{% else %}<tr><td colspan="5">No blood group records found.</td></tr>{% endfor %}</tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             PROFILE
+        ====================================================== -->
+
+        <section id="profile"
+                 class="page-section">
+
+
+            <div class="page-header">
+
+                <div>
+
+                    <h1>
+                        Profile
+                    </h1>
+
+                    <p>
+                        Manage your administrator profile.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="profile-card">
+
+
+                <div class="profile-avatar">{{ current_admin.full_name[:2]|upper if current_admin else 'AD' }}</div>
+
+
+                <div class="profile-information">
+
+
+                    <h2>
+                        {{ session.get('name', 'Administrator') }}
+                    </h2>
+
+
+                    <p class="profile-role">
+                        System Administrator
+                    </p>
+
+
+                    <div class="profile-details">
+
+
+                        <div>
+
+                            <span>
+                                Role
+                            </span>
+
+                            <strong>
+                                Administrator
+                            </strong>
+
+                        </div>
+
+
+                        <div>
+
+                            <span>
+                                Email
+                            </span>
+
+                            <strong>
+                                {{ current_admin.email if current_admin else '' }}
+                            </strong>
+
+                        </div>
+
+
+                        <div>
+
+                            <span>
+                                Access Level
+                            </span>
+
+                            <strong>
+                                Full System Access
+                            </strong>
+
+                        </div>
+
+
+                        <div>
+
+                            <span>
+                                Status
+                            </span>
+
+                            <strong class="active-text">
+                                {{ current_admin.status if current_admin else '' }}
+                            </strong>
+
+                        </div>
+
+
+                    </div>
+
+
+                    <button class="primary-button"
+                            onclick="openEditProfileModal()">
+
+                        Edit Profile
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             SETTINGS
+        ====================================================== -->
+
+        <section id="settings"
+                 class="page-section">
+
+
+            <div class="page-header">
+
+                <div>
+
+                    <h1>
+                        Settings
+                    </h1>
+
+                    <p>
+                        Manage administrator preferences.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="settings-card">
+
+
+                <div class="setting-row">
+
+                    <div>
+
+                        <h3>
+                            System Notifications
+                        </h3>
+
+                        <p>
+                            Receive important system notifications.
+                        </p>
+
+                    </div>
+
+
+                    <label class="toggle">
+
+                        <input type="checkbox"
+                               checked>
+
+                        <span class="slider"></span>
+
+                    </label>
+
+                </div>
+
+
+                <div class="setting-row">
+
+                    <div>
+
+                        <h3>
+                            User Registration Alerts
+                        </h3>
+
+                        <p>
+                            Get notified when new users register.
+                        </p>
+
+                    </div>
+
+
+                    <label class="toggle">
+
+                        <input type="checkbox"
+                               checked>
+
+                        <span class="slider"></span>
+
+                    </label>
+
+                </div>
+
+
+                <div class="setting-row">
+
+                    <div>
+
+                        <h3>
+                            Request Alerts
+                        </h3>
+
+                        <p>
+                            Receive alerts for important hospital requests.
+                        </p>
+
+                    </div>
+
+
+                    <label class="toggle">
+
+                        <input type="checkbox"
+                               checked>
+
+                        <span class="slider"></span>
+
+                    </label>
+
+                </div>
+
+
+                <div class="setting-row">
+
+                    <div>
+
+                        <h3>
+                            Email Updates
+                        </h3>
+
+                        <p>
+                            Receive BloodLink system updates by email.
+                        </p>
+
+                    </div>
+
+
+                    <label class="toggle">
+
+                        <input type="checkbox">
+
+                        <span class="slider"></span>
+
+                    </label>
+
+                </div>
+
+
+            </div>
+
+        </section>
+
+
+    </main>
+
+</div>
+
+
+<!-- =========================================================
+     ADD USER MODAL
+========================================================== -->
+
+<div id="addUserModal"
+     class="modal-overlay">
+
+
+    <div class="modal">
+
+
+        <div class="modal-header">
+
+            <div>
+
+                <h2>
+                    Add User
+                </h2>
+
+                <p>
+                    Create a new BloodLink user.
+                </p>
+
+            </div>
+
+
+            <button class="modal-close"
+                    onclick="closeAddUserModal()">
+
+                ×
+
+            </button>
+
+        </div>
+
+
+        <form onsubmit="addUser(event)">
+
+
+            <div class="form-group">
+
+                <label>
+                    Full Name
+                </label>
+
+                <input type="text"
+                       id="newUserName"
+                       required>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Email
+                </label>
+
+                <input type="email"
+                       id="newUserEmail"
+                       required>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Role
+                </label>
+
+                <select id="newUserRole"
+                        required>
+
+                    <option value="">
+                        Select role
+                    </option>
+
+                    <option value="Donor">
+                        Donor
+                    </option>
+
+                    <option value="HospitalStaff">
+                        Hospital Staff
+                    </option>
+
+                    <option value="BloodBankStaff">
+                        Blood Bank Staff
+                    </option>
+
+                    <option value="Admin">
+                        Admin
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Phone
+                </label>
+
+                <input type="text"
+                       id="newUserPhone">
+
+            </div>
+
+            <div class="form-group">
+                <label for="newUserPassword">Temporary Password</label>
+                <input type="password" id="newUserPassword" required minlength="8">
+            </div>
+
+            <div class="form-group admin-role-field" id="hospitalRoleField" style="display:none">
+                <label for="newUserHospital">Hospital</label>
+                <select id="newUserHospital"><option value="">Select hospital</option>{% for hospital in hospitals %}<option value="{{ hospital.hospital_id }}">{{ hospital.hospital_name }}</option>{% endfor %}</select>
+            </div>
+
+            <div class="form-group admin-role-field" id="bloodBankRoleField" style="display:none">
+                <label for="newUserBloodBank">Blood Bank</label>
+                <select id="newUserBloodBank"><option value="">Select blood bank</option>{% for bank in blood_banks %}<option value="{{ bank.BankID }}">{{ bank.BankName }}</option>{% endfor %}</select>
+            </div>
+
+            <div id="donorRoleFields" class="admin-role-field" style="display:none">
+                <div class="form-group"><label for="newDonorBloodGroup">Blood Group</label><select id="newDonorBloodGroup"><option value="">Select blood group</option>{% for group in ['A+','A-','B+','B-','AB+','AB-','O+','O-'] %}<option value="{{ group }}">{{ group }}</option>{% endfor %}</select></div>
+                <div class="form-group"><label for="newDonorGender">Gender</label><select id="newDonorGender"><option value="">Select gender</option><option>Female</option><option>Male</option></select></div>
+                <div class="form-group"><label for="newDonorDob">Date of Birth</label><input type="date" id="newDonorDob"></div>
+                <div class="form-group"><label for="newDonorWeight">Weight (kg)</label><input type="number" id="newDonorWeight" min="1" step="0.1"></div>
+                <div class="form-group"><label for="newDonorCity">City</label><input id="newDonorCity"></div>
+                <div class="form-group"><label for="newDonorDistrict">District</label><input id="newDonorDistrict"></div>
+            </div>
+
+
+            <div class="modal-actions">
+
+                <button type="button"
+                        class="secondary-button"
+                        onclick="closeAddUserModal()">
+
+                    Cancel
+
+                </button>
+
+
+                <button type="submit"
+                        class="primary-button">
+
+                    Add User
+
+                </button>
+
+            </div>
+
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     EDIT PROFILE MODAL
+========================================================== -->
+
+<div id="editProfileModal"
+     class="modal-overlay">
+
+
+    <div class="modal">
+
+
+        <div class="modal-header">
+
+            <div>
+
+                <h2>
+                    Edit Profile
+                </h2>
+
+                <p>
+                    Update administrator information.
+                </p>
+
+            </div>
+
+
+            <button class="modal-close"
+                    onclick="closeEditProfileModal()">
+
+                ×
+
+            </button>
+
+        </div>
+
+
+        <form onsubmit="saveProfile(event)">
+
+
+            <div class="form-group">
+
+                <label>
+                    Full Name
+                </label>
+
+                <input type="text"
+                       id="profileName"
+                       value="{{ current_admin.full_name if current_admin else session.get('name', 'Administrator') }}"
+                       required>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Email
+                </label>
+
+                <input type="email"
+                       id="profileEmail"
+                       value="{{ current_admin.email if current_admin else '' }}"
+                       required>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Phone
+                </label>
+
+                <input type="text"
+                       id="profilePhone"
+                       value="{{ current_admin.phone if current_admin else '' }}">
+
+            </div>
+
+
+            <div class="modal-actions">
+
+                <button type="button"
+                        class="secondary-button"
+                        onclick="closeEditProfileModal()">
+
+                    Cancel
+
+                </button>
+
+
+                <button type="submit"
+                        class="primary-button">
+
+                    Save Changes
+
+                </button>
+
+            </div>
+
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<script src="{{ url_for('static', filename='js/admin_dashboard.js') }}"></script>
+
+</body>
+
+</html>
