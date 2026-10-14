@@ -1,0 +1,1242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Hospital Dashboard - BloodLink</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/hospital_dashboard.css') }}">
+</head>
+
+<body>
+
+<div class="dashboard-container">
+
+    <!-- =====================================================
+         SIDEBAR
+    ====================================================== -->
+
+    <aside class="sidebar">
+
+        <div class="logo-section">
+
+            <div class="logo-icon">
+                🩸
+            </div>
+
+            <div>
+                <h2>BloodLink</h2>
+                <span>Hospital Portal</span>
+            </div>
+
+        </div>
+
+
+        <!-- MAIN -->
+
+        <div class="nav-section">
+
+            <p class="nav-title">MAIN</p>
+
+            <button class="nav-item active"
+                    onclick="showSection('dashboard', this)">
+
+                <span class="nav-icon">▦</span>
+                <span>Dashboard</span>
+
+            </button>
+
+
+            <button class="nav-item"
+                    onclick="showSection('requests', this)">
+
+                <span class="nav-icon">📝</span>
+                <span>Blood Requests</span>
+
+            </button>
+
+
+            <button class="nav-item"
+                    onclick="showSection('history', this)">
+
+                <span class="nav-icon">📋</span>
+                <span>Request History</span>
+
+            </button>
+
+
+            <button class="nav-item"
+                    onclick="showSection('allocations', this)">
+
+                <span class="nav-icon">🩸</span>
+                <span>Blood Allocations</span>
+
+            </button>
+
+        </div>
+
+
+        <!-- ACCOUNT -->
+
+        <div class="nav-section">
+
+            <p class="nav-title">ACCOUNT</p>
+
+            <button class="nav-item"
+                    onclick="showSection('profile', this)">
+
+                <span class="nav-icon">👤</span>
+                <span>Profile</span>
+
+            </button>
+
+
+            <button class="nav-item"
+                    onclick="showSection('settings', this)">
+
+                <span class="nav-icon">⚙</span>
+                <span>Settings</span>
+
+            </button>
+
+        </div>
+
+
+        <!-- LOGOUT -->
+
+        <div class="sidebar-bottom">
+
+            <a href="{{ url_for('auth.logout') }}"
+               class="logout-button">
+
+                <span class="nav-icon">↪</span>
+                <span>Logout</span>
+
+            </a>
+
+        </div>
+
+    </aside>
+
+
+    <!-- =====================================================
+         MAIN CONTENT
+    ====================================================== -->
+
+    <main class="main-content">
+
+
+        <!-- TOP BAR -->
+
+        <header class="topbar">
+
+            <div class="search-container">
+
+                <span class="search-icon">⌕</span>
+
+                <input type="text"
+                       id="globalSearch"
+                       placeholder="Search...">
+
+            </div>
+
+
+            <div class="topbar-right">
+
+                <button class="notification-button">
+
+                    🔔
+
+                    <span class="notification-dot"></span>
+
+                </button>
+
+
+                <div class="user-profile">
+
+                    <div class="user-avatar">
+                        HS
+                    </div>
+
+                    <div class="user-details">
+
+                        <strong>
+                            {{ session.get('name', 'Hospital Staff') }}
+                        </strong>
+
+                        <span>Hospital Staff</span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <!-- =====================================================
+             DASHBOARD
+        ====================================================== -->
+
+        <section id="dashboard"
+                 class="page-section active-section">
+
+            <div class="page-header">
+
+                <div>
+
+                    <h1>
+                        Welcome, {{ session.get('name', 'Hospital Staff') }} 👋
+                    </h1>
+
+                    <p>
+                        Here's an overview of your blood requests and allocations.
+                    </p>
+
+                </div>
+
+                <div class="date-display">
+                    📅 Today
+                </div>
+
+            </div>
+
+
+            <!-- SUMMARY -->
+
+            <div class="summary-grid">
+
+                <div class="summary-card">
+
+                    <div class="card-icon blue">
+                        📝
+                    </div>
+
+                    <div class="card-content">
+
+                        <span>Total Requests</span>
+
+                        <h2>{{ total_requests or 0 }}</h2>
+
+                        <small>All blood requests</small>
+
+                    </div>
+
+                </div>
+
+
+                <div class="summary-card">
+
+                    <div class="card-icon orange">
+                        ⏳
+                    </div>
+
+                    <div class="card-content">
+
+                        <span>Pending Requests</span>
+
+                        <h2>{{ pending_requests or 0 }}</h2>
+
+                        <small>Awaiting response</small>
+
+                    </div>
+
+                </div>
+
+
+                <div class="summary-card">
+
+                    <div class="card-icon green">
+                        ✓
+                    </div>
+
+                    <div class="card-content">
+
+                        <span>Approved Requests</span>
+
+                        <h2>{{ approved_requests or 0 }}</h2>
+
+                        <small>Requests approved</small>
+
+                    </div>
+
+                </div>
+
+
+                <div class="summary-card">
+
+                    <div class="card-icon purple">
+                        🩸
+                    </div>
+
+                    <div class="card-content">
+
+                        <span>Allocated Units</span>
+
+                        <h2>{{ allocated_units or 0 }}</h2>
+
+                        <small>Blood units received</small>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- LOWER CONTENT -->
+
+            <div class="dashboard-grid">
+
+
+                <!-- RECENT REQUESTS -->
+
+                <div class="content-card large-card">
+
+                    <div class="card-header">
+
+                        <div>
+
+                            <h2>Recent Blood Requests</h2>
+
+                            <p>
+                                Latest requests raised by your hospital
+                            </p>
+
+                        </div>
+
+                        <button class="view-button"
+                                onclick="showSection('requests')">
+
+                            View All
+
+                        </button>
+
+                    </div>
+
+
+                    <div class="table-container">
+
+                        <table>
+
+                            <thead>
+
+                                <tr>
+
+                                    <th>Request ID</th>
+                                    <th>Blood Group</th>
+                                    <th>Units</th>
+                                    <th>Priority</th>
+                                    <th>Date</th>
+                                    <th>Status</th>
+
+                                </tr>
+
+                            </thead>
+
+
+                            <tbody>{% for req in requests_list[:5] %}<tr><td>{{ req.request_id }}</td><td>{{ req.blood_group }}</td><td>{{ req.units_required }}</td><td>{{ req.urgency }}</td><td>{{ req.request_date }}</td><td>{{ req.status }}</td></tr>{% else %}<tr><td colspan="6">No requests found.</td></tr>{% endfor %}</tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+
+                <!-- QUICK ACTIONS -->
+
+                <div class="content-card">
+
+                    <div class="card-header">
+
+                        <div>
+
+                            <h2>Quick Actions</h2>
+
+                            <p>
+                                Common hospital activities
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="quick-actions">
+
+                        <button class="quick-action"
+                                onclick="openRequestModal()">
+
+                            <div class="quick-icon red">
+                                🩸
+                            </div>
+
+                            <div>
+
+                                <strong>
+                                    Request Blood
+                                </strong>
+
+                                <span>
+                                    Create a new blood request
+                                </span>
+
+                            </div>
+
+                        </button>
+
+
+                        <button class="quick-action"
+                                onclick="showSection('allocations')">
+
+                            <div class="quick-icon green">
+                                ✓
+                            </div>
+
+                            <div>
+
+                                <strong>
+                                    View Allocations
+                                </strong>
+
+                                <span>
+                                    Check allocated blood units
+                                </span>
+
+                            </div>
+
+                        </button>
+
+
+                        <button class="quick-action"
+                                onclick="showSection('history')">
+
+                            <div class="quick-icon blue">
+                                📋
+                            </div>
+
+                            <div>
+
+                                <strong>
+                                    Request History
+                                </strong>
+
+                                <span>
+                                    View previous requests
+                                </span>
+
+                            </div>
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             BLOOD REQUESTS
+        ====================================================== -->
+
+        <section id="requests"
+                 class="page-section">
+
+            <div class="page-header">
+
+                <div>
+
+                    <h1>Blood Requests</h1>
+
+                    <p>
+                        Create and manage blood requests.
+                    </p>
+
+                </div>
+
+                <button class="primary-button"
+                        onclick="openRequestModal()">
+
+                    + New Blood Request
+
+                </button>
+
+            </div>
+
+
+            <div class="content-card">
+
+                <div class="card-header">
+
+                    <div>
+
+                        <h2>Current Requests</h2>
+
+                        <p>
+                            Requests submitted by your hospital
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="table-container">
+
+                    <table id="requestTable">
+
+                        <thead>
+
+                            <tr>
+
+                                <th>Request ID</th>
+                                <th>Blood Group</th>
+                                <th>Units</th>
+                                <th>Priority</th>
+                                <th>Requested Date</th>
+                                <th>Status</th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody>{% for req in requests_list %}<tr><td>{{ req.request_id }}</td><td>{{ req.blood_group }}</td><td>{{ req.units_required }}</td><td>{{ req.urgency }}</td><td>{{ req.request_date }}</td><td>{{ req.status }}</td></tr>{% else %}<tr><td colspan="6">No requests found.</td></tr>{% endfor %}</tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             REQUEST HISTORY
+        ====================================================== -->
+
+        <section id="history"
+                 class="page-section">
+
+            <div class="page-header">
+
+                <div>
+
+                    <h1>Request History</h1>
+
+                    <p>
+                        View your hospital's previous blood requests.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="content-card">
+
+                <div class="card-header">
+
+                    <div>
+
+                        <h2>Previous Requests</h2>
+
+                        <p>
+                            Completed and processed requests
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="table-container">
+
+                    <table>
+
+                        <thead>
+
+                            <tr>
+
+                                <th>Request ID</th>
+                                <th>Blood Group</th>
+                                <th>Units</th>
+                                <th>Requested Date</th>
+                                <th>Required Date</th>
+                                <th>Status</th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody>{% for req in requests_list if req.status in ["Fulfilled","Rejected"] %}<tr><td>{{ req.request_id }}</td><td>{{ req.blood_group }}</td><td>{{ req.units_required }}</td><td>{{ req.request_date }}</td><td>{{ req.required_date }}</td><td>{{ req.status }}</td></tr>{% else %}<tr><td colspan="6">No processed requests yet.</td></tr>{% endfor %}</tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             BLOOD ALLOCATIONS
+        ====================================================== -->
+
+        <section id="allocations"
+                 class="page-section">
+
+            <div class="page-header">
+
+                <div>
+
+                    <h1>Blood Allocations</h1>
+
+                    <p>
+                        View blood units allocated to your hospital.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="summary-grid">
+
+                <div class="summary-card">
+
+                    <div class="card-icon green">
+                        ✓
+                    </div>
+
+                    <div class="card-content">
+
+                        <span>Total Allocated</span>
+
+                        <h2>{{ allocated_units or 0 }}</h2>
+
+                        <small>Units received</small>
+
+                    </div>
+
+                </div>
+
+
+                <div class="summary-card">
+
+                    <div class="card-icon blue">
+                        🩸
+                    </div>
+
+                    <div class="card-content">
+
+                        <span>This Month</span>
+
+                        <h2>{{ allocations_this_month or 0 }}</h2>
+
+                        <small>Units allocated</small>
+
+                    </div>
+
+                </div>
+
+
+                <div class="summary-card">
+
+                    <div class="card-icon orange">
+                        ⏳
+                    </div>
+
+                    <div class="card-content">
+
+                        <span>Pending</span>
+
+                        <h2>{{ pending_requests or 0 }}</h2>
+
+                        <small>Requests pending</small>
+
+                    </div>
+
+                </div>
+
+
+                <div class="summary-card">
+
+                    <div class="card-icon purple">
+                        📦
+                    </div>
+
+                    <div class="card-content">
+
+                        <span>Completed</span>
+
+                        <h2>{{ fulfilled_requests or 0 }}</h2>
+
+                        <small>Completed allocations</small>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="content-card">
+
+                <div class="card-header">
+
+                    <div>
+
+                        <h2>Allocated Blood Units</h2>
+
+                        <p>
+                            Blood units received by your hospital
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="table-container">
+
+                    <table>
+
+                        <thead>
+
+                            <tr>
+
+                                <th>Allocation ID</th>
+                                <th>Request ID</th>
+                                <th>Blood Group</th>
+                                <th>Units</th>
+                                <th>Allocated Date</th>
+                                <th>Status</th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody>{% for item in allocations_list %}<tr><td>{{ item.allocation_id }}</td><td>{{ item.request_id }}</td><td>{{ item.blood_group }}</td><td>{{ item.units }}</td><td>{{ item.allocation_date }}</td><td>{{ item.status }}</td></tr>{% else %}<tr><td colspan="6">No allocations recorded.</td></tr>{% endfor %}</tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             PROFILE
+        ====================================================== -->
+
+        <section id="profile"
+                 class="page-section">
+
+            <div class="page-header">
+
+                <div>
+
+                    <h1>Profile</h1>
+
+                    <p>
+                        Manage your hospital staff profile.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="profile-card">
+
+                <div class="profile-avatar">
+                    HS
+                </div>
+
+
+                <div class="profile-information">
+
+                    <h2>
+                        {{ session.get('name', 'Hospital Staff') }}
+                    </h2>
+
+                    <p class="profile-role">
+                        Hospital Staff
+                    </p>
+
+
+                    <div class="profile-details">
+
+                        <div>
+
+                            <span>Role</span>
+
+                            <strong>
+                                Hospital Staff
+                            </strong>
+
+                        </div>
+
+
+                        <div>
+
+                            <span>Email</span>
+
+                            <strong>
+                                {{ staff.email }}
+                            </strong>
+
+                        </div>
+
+
+                        <div>
+
+                            <span>Hospital</span>
+
+                            <strong>
+                                {{ staff.hospital_name }}
+                            </strong>
+
+                        </div>
+
+
+                        <div>
+
+                            <span>Status</span>
+
+                            <strong class="active-text">
+                                {{ staff.status }}
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+                    <button class="primary-button"
+                            onclick="openEditProfileModal()">
+
+                        Edit Profile
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             SETTINGS
+        ====================================================== -->
+
+        <section id="settings"
+                 class="page-section">
+
+            <div class="page-header">
+
+                <div>
+
+                    <h1>Settings</h1>
+
+                    <p>
+                        Manage your Hospital dashboard preferences.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="settings-card">
+
+
+                <div class="setting-row">
+
+                    <div>
+
+                        <h3>Notifications</h3>
+
+                        <p>
+                            Receive notifications about request updates.
+                        </p>
+
+                    </div>
+
+
+                    <label class="toggle">
+
+                        <input type="checkbox" checked>
+
+                        <span class="slider"></span>
+
+                    </label>
+
+                </div>
+
+
+                <div class="setting-row">
+
+                    <div>
+
+                        <h3>Request Status Alerts</h3>
+
+                        <p>
+                            Get notified when a request is approved or rejected.
+                        </p>
+
+                    </div>
+
+
+                    <label class="toggle">
+
+                        <input type="checkbox" checked>
+
+                        <span class="slider"></span>
+
+                    </label>
+
+                </div>
+
+
+                <div class="setting-row">
+
+                    <div>
+
+                        <h3>Allocation Alerts</h3>
+
+                        <p>
+                            Receive notifications when blood is allocated.
+                        </p>
+
+                    </div>
+
+
+                    <label class="toggle">
+
+                        <input type="checkbox" checked>
+
+                        <span class="slider"></span>
+
+                    </label>
+
+                </div>
+
+
+                <div class="setting-row">
+
+                    <div>
+
+                        <h3>Email Updates</h3>
+
+                        <p>
+                            Receive important BloodLink updates by email.
+                        </p>
+
+                    </div>
+
+
+                    <label class="toggle">
+
+                        <input type="checkbox">
+
+                        <span class="slider"></span>
+
+                    </label>
+
+                </div>
+
+
+            </div>
+
+        </section>
+
+
+    </main>
+
+</div>
+
+
+<!-- =========================================================
+     NEW BLOOD REQUEST MODAL
+========================================================== -->
+
+<div id="requestModal"
+     class="modal-overlay">
+
+    <div class="modal">
+
+        <div class="modal-header">
+
+            <div>
+
+                <h2>New Blood Request</h2>
+
+                <p>
+                    Submit a blood request to the Blood Bank.
+                </p>
+
+            </div>
+
+
+            <button class="modal-close"
+                    onclick="closeRequestModal()">
+
+                ×
+
+            </button>
+
+        </div>
+
+
+        <form onsubmit="submitBloodRequest(event)">
+
+
+            <div class="form-group">
+
+                <label>
+                    Blood Group
+                </label>
+
+                <select id="requestBloodGroup"
+                        required>
+
+                    <option value="">
+                        Select blood group
+                    </option>
+
+                    <option value="A+">A+</option>
+                    <option value="A-">A-</option>
+                    <option value="B+">B+</option>
+                    <option value="B-">B-</option>
+                    <option value="O+">O+</option>
+                    <option value="O-">O-</option>
+                    <option value="AB+">AB+</option>
+                    <option value="AB-">AB-</option>
+
+                </select>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Number of Units
+                </label>
+
+                <input type="number"
+                       id="requestUnits"
+                       min="1"
+                       required>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Priority
+                </label>
+
+                <select id="requestPriority"
+                        required>
+
+                    <option value="">
+                        Select priority
+                    </option>
+
+                    <option value="Routine">
+                        Routine
+                    </option>
+
+                    <option value="Urgent">
+                        Urgent
+                    </option>
+
+                    <option value="Emergency">
+                        Emergency
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Required Date
+                </label>
+
+                <input type="date"
+                       id="requiredDate"
+                       required>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Reason / Notes
+                </label>
+
+                <textarea id="requestNotes"
+                          rows="3"
+                          placeholder="Enter additional information..."></textarea>
+
+            </div>
+
+
+            <div class="modal-actions">
+
+                <button type="button"
+                        class="secondary-button"
+                        onclick="closeRequestModal()">
+
+                    Cancel
+
+                </button>
+
+
+                <button type="submit"
+                        class="primary-button">
+
+                    Submit Request
+
+                </button>
+
+            </div>
+
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     EDIT PROFILE MODAL
+========================================================== -->
+
+<div id="editProfileModal"
+     class="modal-overlay">
+
+    <div class="modal">
+
+        <div class="modal-header">
+
+            <div>
+
+                <h2>Edit Profile</h2>
+
+                <p>
+                    Update your hospital staff information.
+                </p>
+
+            </div>
+
+
+            <button class="modal-close"
+                    onclick="closeEditProfileModal()">
+
+                ×
+
+            </button>
+
+        </div>
+
+
+        <form onsubmit="saveProfile(event)">
+
+
+            <div class="form-group">
+
+                <label>
+                    Full Name
+                </label>
+
+                <input type="text"
+                       id="profileName"
+                       value="{{ session.get('name', 'Hospital Staff') }}"
+                       required>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Email
+                </label>
+
+                <input type="email"
+                       id="profileEmail"
+                       value="{{ staff.email }}"
+                       required>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Phone
+                </label>
+
+                <input type="text"
+                       id="profilePhone"
+                       value="{{ staff.phone }}">
+
+            </div>
+
+
+            <div class="modal-actions">
+
+                <button type="button"
+                        class="secondary-button"
+                        onclick="closeEditProfileModal()">
+
+                    Cancel
+
+                </button>
+
+
+                <button type="submit"
+                        class="primary-button">
+
+                    Save Changes
+
+                </button>
+
+            </div>
+
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<script src="{{ url_for('static', filename='js/hospital_dashboard.js') }}"></script>
+
+</body>
+</html>
