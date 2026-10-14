@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>BloodLink | Register</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/common.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/register.css') }}">
+
+</head>
+
+<body>
+
+<section class="auth-page">
+
+    <div class="container">
+
+        <div class="row auth-container shadow-lg">
+
+            <!-- ==========================================
+                        LEFT SIDE
+            =========================================== -->
+
+            <div class="col-lg-5 auth-left">
+
+                <div class="auth-card">
+
+                    <!-- Logo -->
+
+                    <div class="auth-logo">
+
+                        <i class="bi bi-heart-pulse-fill"></i>
+
+                        <span>BloodLink</span>
+
+                    </div>
+
+                    <!-- Heading -->
+
+                    <h2 class="auth-title">
+
+                        Create Your Account
+
+                    </h2>
+
+                    <p class="auth-subtitle">
+
+                        Join BloodLink to donate, request and manage blood donations securely.
+
+                    </p>
+
+                    <!-- FORM -->
+
+                    <form action="{{ url_for('auth.register') }}" method="POST" class="auth-form">
+
+                        <!-- Role -->
+
+                        <div class="mb-4">
+
+                            <label class="form-label">
+
+                                Register As
+
+                            </label>
+
+                            <select
+                                class="form-select auth-select"
+                                id="role"
+                                name="role"
+                                required>
+
+                                <option value="">Choose Role</option>
+
+                                <option value="Donor">Donor</option>
+
+                                <option value="Hospital">Hospital</option>
+
+                                <option value="Blood Bank">Blood Bank</option>
+
+                            </select>
+
+                        </div>
+
+                        <!-- PERSONAL INFORMATION -->
+
+                        <div class="form-section">
+
+                            <h5 class="section-title">
+
+                                Personal Information
+
+                            </h5>
+
+                            <div class="mb-3">
+
+                                <label class="form-label">
+
+                                    Full Name / Organization Name
+
+                                </label>
+
+                                <input
+                                    type="text"
+                                    class="form-control auth-input"
+                                    name="name"
+                                    placeholder="Enter your name"
+                                    required>
+
+                            </div>
+
+                            <div class="mb-3">
+
+                                <label class="form-label">
+
+                                    Email Address
+
+                                </label>
+
+                                <input
+                                    type="email"
+                                    class="form-control auth-input"
+                                    name="email"
+                                    placeholder="Enter your email"
+                                    required>
+
+                            </div>
+
+                            <div class="mb-3">
+
+                                <label class="form-label">
+
+                                    Phone Number
+
+                                </label>
+
+                                <input
+                                    type="tel"
+                                    class="form-control auth-input"
+                                    name="phone"
+                                    placeholder="Enter phone number"
+                                    required>
+
+                            </div>
+
+                        </div>
+
+                        <!-- SECURITY -->
+
+                        <div class="form-section">
+
+                            <h5 class="section-title">
+
+                                Security
+
+                            </h5>
+
+                            <div class="mb-3">
+
+                                <label class="form-label">
+
+                                    Password
+
+                                </label>
+
+                                <div class="auth-password-box">
+
+                                    <input
+                                        type="password"
+                                        id="password"
+                                        class="form-control auth-input"
+                                        name="password"
+                                        placeholder="Enter password"
+                                        required>
+
+                                    <i class="bi bi-eye" id="togglePassword"></i>
+
+                                </div>
+
+                            </div>
+
+                            <div class="mb-3">
+
+                                <label class="form-label">
+
+                                    Confirm Password
+
+                                </label>
+
+                                <div class="auth-password-box">
+
+                                    <input
+                                        type="password"
+                                        id="confirmPassword"
+                                        class="form-control auth-input"
+                                        name="confirm_password"
+                                        placeholder="Confirm password"
+                                        required>
+
+                                    <i class="bi bi-eye" id="toggleConfirmPassword"></i>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <!-- DYNAMIC SECTION -->
+
+                        <div class="form-section">
+
+                            <h5 class="section-title">
+
+                                Additional Information
+
+                            </h5>
+
+                            <div id="dynamic-fields">
+
+                                <div class="empty-role-message">
+
+                                    Select a role to continue.
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <!-- BUTTON -->
+
+                        <button
+                            type="submit"
+                            class="auth-submit-btn mt-4">
+
+                            Create Account
+
+                        </button>
+
+                    </form>
+
+                    <div class="auth-register">
+
+                        Already have an account?
+
+                        <a href="{{ url_for('auth.login') }}">
+
+                            Login
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- ==========================================
+                        RIGHT SIDE
+            =========================================== -->
+
+            <div class="col-lg-7 auth-right">
+
+                <img
+                    src="https://images.unsplash.com/photo-1615461066841-6116e61058f4?w=1200"
+                    class="auth-image"
+                    alt="Blood Donation">
+
+                <div class="auth-overlay">
+
+                    <h2>
+
+                        Every Drop Counts
+
+                    </h2>
+
+                    <p>
+
+                        Become a part of a secure cloud-based blood donation network connecting donors, hospitals and blood banks.
+
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- Bootstrap -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Register JS -->
+<script src="{{ url_for('static', filename='js/register.js') }}"></script>
+
+</body>
+
+</html>
