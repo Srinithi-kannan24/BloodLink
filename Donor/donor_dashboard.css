@@ -1,0 +1,496 @@
+/* ===========================
+   BloodLink Donor Dashboard
+=========================== */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins',sans-serif;
+}
+
+body{
+    background:#111827;
+    color:#fff;
+}
+
+/* ===========================
+   Layout
+=========================== */
+
+.wrapper{
+    display:flex;
+    min-height:100vh;
+}
+
+/* ===========================
+   Sidebar
+=========================== */
+
+.sidebar{
+    width:260px;
+    background:#1F2937;
+    padding:25px 20px;
+    position:fixed;
+    top:0;
+    left:0;
+    bottom:0;
+    overflow-y:auto;
+}
+
+.logo{
+    font-size:28px;
+    font-weight:700;
+    color:#DC2626;
+    margin-bottom:40px;
+    text-align:center;
+}
+
+.logo span{
+    color:#fff;
+}
+
+.menu{
+    list-style:none;
+}
+
+.menu li{
+    margin-bottom:10px;
+}
+
+.menu li a{
+    display:flex;
+    align-items:center;
+    gap:15px;
+    padding:14px 18px;
+    text-decoration:none;
+    color:#d1d5db;
+    border-radius:12px;
+    transition:.3s;
+    font-size:15px;
+}
+
+.menu li a:hover{
+    background:#DC2626;
+    color:white;
+    transform:translateX(5px);
+}
+
+.menu li.active a{
+    background:#DC2626;
+    color:white;
+}
+
+.logout{
+    margin-top:40px;
+}
+
+/* ===========================
+   Main Content
+=========================== */
+
+.main-content{
+    margin-left:260px;
+    width:calc(100% - 260px);
+    padding:30px;
+}
+
+/* ===========================
+   Topbar
+=========================== */
+
+.topbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:35px;
+}
+
+.search-box{
+    background:#1F2937;
+    padding:12px 18px;
+    border-radius:12px;
+    width:350px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.search-box input{
+    width:100%;
+    border:none;
+    outline:none;
+    background:transparent;
+    color:white;
+}
+
+.search-box input::placeholder{
+    color:#9ca3af;
+}
+
+.top-right{
+    display:flex;
+    align-items:center;
+    gap:20px;
+}
+
+.icon-btn{
+    width:48px;
+    height:48px;
+    border:none;
+    border-radius:50%;
+    background:#1F2937;
+    color:white;
+    cursor:pointer;
+    transition:.3s;
+    font-size:18px;
+}
+
+.icon-btn:hover{
+    background:#DC2626;
+}
+
+.profile{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.profile img{
+    width:50px;
+    height:50px;
+    border-radius:50%;
+    border:2px solid #DC2626;
+}
+
+.profile h6{
+    margin:0;
+    font-size:15px;
+}
+
+.profile small{
+    color:#9ca3af;
+}
+
+/* ===========================
+   Welcome
+=========================== */
+
+.welcome{
+    margin-bottom:30px;
+}
+
+.welcome h2{
+    font-weight:600;
+    margin-bottom:10px;
+}
+
+.welcome p{
+    color:#9ca3af;
+}
+
+/* ===========================
+   Cards
+=========================== */
+
+.cards{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:20px;
+    margin-bottom:35px;
+}
+
+.card-box{
+    background:#1F2937;
+    padding:25px;
+    border-radius:18px;
+    transition:.3s;
+    cursor:pointer;
+    box-shadow:0 5px 20px rgba(0,0,0,.25);
+}
+
+.card-box:hover{
+    transform:translateY(-8px);
+    box-shadow:0 15px 30px rgba(220,38,38,.35);
+}
+
+.card-box i{
+    font-size:38px;
+    color:#DC2626;
+    margin-bottom:18px;
+}
+
+.card-box h3{
+    font-size:28px;
+    margin-bottom:8px;
+}
+
+.card-box p{
+    color:#9ca3af;
+}
+
+/* ===========================
+   Dashboard Grid
+=========================== */
+
+.dashboard-grid{
+    display:grid;
+    grid-template-columns:2fr 1fr;
+    gap:25px;
+}
+
+/* ===========================
+   Table Card
+=========================== */
+
+.table-card,
+.emergency-card{
+    background:#1F2937;
+    border-radius:18px;
+    padding:25px;
+    box-shadow:0 5px 20px rgba(0,0,0,.25);
+}
+
+.card-header{
+    margin-bottom:20px;
+}
+
+.card-header h4{
+    margin:0;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+table th{
+    background:#DC2626;
+    color:white;
+    padding:14px;
+    text-align:left;
+}
+
+table td{
+    padding:14px;
+    border-bottom:1px solid #374151;
+}
+
+table tr:hover{
+    background:#2b3648;
+}
+
+.success{
+    background:#16a34a;
+    color:white;
+    padding:6px 12px;
+    border-radius:20px;
+    font-size:13px;
+}
+
+/* ===========================
+   Emergency Requests
+=========================== */
+
+.request{
+    background:#111827;
+    border-radius:14px;
+    padding:18px;
+    margin-bottom:18px;
+}
+
+.request h5{
+    margin-bottom:8px;
+}
+
+.request p{
+    color:#9ca3af;
+    margin-bottom:15px;
+}
+
+.request button{
+    border:none;
+    background:#DC2626;
+    color:white;
+    padding:10px 18px;
+    border-radius:8px;
+    cursor:pointer;
+    transition:.3s;
+}
+
+.request button:hover{
+    background:#b91c1c;
+}
+
+/* ===========================
+   Footer
+=========================== */
+
+footer{
+    margin-top:35px;
+    text-align:center;
+    color:#9ca3af;
+}
+
+/* ===========================
+   Responsive
+=========================== */
+
+@media(max-width:1100px){
+
+    .dashboard-grid{
+        grid-template-columns:1fr;
+    }
+
+}
+
+@media(max-width:768px){
+
+    .topbar{
+        flex-direction:column;
+        gap:20px;
+        align-items:flex-start;
+    }
+
+    .search-box{
+        width:100%;
+    }
+
+    .cards{
+        grid-template-columns:1fr;
+    }
+
+}
+
+@media(max-width:500px){
+
+    .main-content{
+        padding:18px;
+    }
+
+    .profile div{
+        display:none;
+    }
+
+}
+.profile-section {
+    padding: 30px;
+    border-radius: 15px;
+    margin-top: 25px;
+    color: #1f2937;
+}
+
+.profile-section .card-header {
+    margin-bottom: 25px;
+}
+
+.profile-section .card-header h4 {
+    color: #1f2937;
+}
+
+.profile-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+.profile-item {
+    padding: 20px;
+    border-radius: 12px;
+    background: #f5f6f8;
+}
+
+.profile-item label {
+    font-size: 14px;
+    color: #6b7280;
+    display: block;
+    margin-bottom: 8px;
+}
+
+.profile-item p {
+    margin: 0;
+    color: #1f2937;
+    font-weight: 600;
+}
+
+.profile-back-btn {
+    margin-top: 25px;
+    padding: 10px 18px;
+    border: none;
+    border-radius: 8px;
+    background: #dc2626;
+    color: white;
+    cursor: pointer;
+}
+
+.profile-back-btn:hover {
+    background: #b91c1c;
+}
+.donate-section {
+    padding: 30px;
+    margin-top: 25px;
+    color: #1f2937;
+    background: white;
+    border-radius: 15px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.donate-section .card-header {
+    margin-bottom: 25px;
+}
+
+.donate-section .card-header h4 {
+    color: #1f2937;
+    margin-bottom: 5px;
+}
+
+.donate-section .card-header p {
+    color: #6b7280;
+}
+
+.donation-form {
+    width: 100%;
+    max-width: 700px;
+}
+
+.donation-form .form-group {
+    margin-bottom: 20px;
+}
+
+.donation-form label {
+    display: block;
+    margin-bottom: 8px;
+    color: #374151;
+    font-weight: 500;
+}
+
+.donation-form select,
+.donation-form input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    background: white;
+    color: #1f2937;
+    font-family: 'Poppins', sans-serif;
+}
+
+.donate-submit-btn {
+    margin-top: 10px;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px;
+    background: #dc2626;
+    color: white;
+    font-family: 'Poppins', sans-serif;
+    cursor: pointer;
+}
+
+.donate-submit-btn:hover {
+    background: #b91c1c;
+}
+
+.donate-section .profile-back-btn {
+    margin-top: 15px;
+}
