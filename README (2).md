@@ -3,7 +3,6 @@
 # BloodLink
 ### Cloud-Native Distributed Blood Bank Management and Allocation System
 
-**DBMS Project · Group 13**
 
 
 </div>
