@@ -5,7 +5,6 @@
 
 **DBMS Project · Group 13**
 
-Python · Flask · MySQL · HTML · CSS · JavaScript · Bootstrap
 
 </div>
 
