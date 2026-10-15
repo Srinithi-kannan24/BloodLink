@@ -1,0 +1,1357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Blood Bank Dashboard - BloodLink</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/bloodbank_dashboard.css') }}">
+</head>
+
+<body>
+
+<div class="dashboard-container">
+
+    <!-- ================= SIDEBAR ================= -->
+
+    <aside class="sidebar">
+
+        <div class="logo-section">
+            <div class="logo-icon">🩸</div>
+
+            <div>
+                <h2>BloodLink</h2>
+                <span>Blood Bank Portal</span>
+            </div>
+        </div>
+
+
+        <!-- MAIN NAVIGATION -->
+
+        <div class="nav-section">
+
+            <p class="nav-title">MAIN</p>
+
+            <button class="nav-item active"
+                    onclick="showSection('dashboard', this)">
+                <span class="nav-icon">▦</span>
+                <span>Dashboard</span>
+            </button>
+
+            <button class="nav-item"
+                    onclick="showSection('inventory', this)">
+                <span class="nav-icon">🩸</span>
+                <span>Blood Inventory</span>
+            </button>
+
+            <button class="nav-item"
+                    onclick="showSection('appointments', this)">
+                <span class="nav-icon">📅</span>
+                <span>Donor Appointments</span>
+            </button>
+
+            <button class="nav-item"
+                    onclick="showSection('donations', this)">
+                <span class="nav-icon">🧪</span>
+                <span>Donations</span>
+            </button>
+
+            <button class="nav-item"
+                    onclick="showSection('requests', this)">
+                <span class="nav-icon">🏥</span>
+                <span>Hospital Requests</span>
+            </button>
+
+            <button class="nav-item"
+                    onclick="showSection('allocation', this)">
+                <span class="nav-icon">🔗</span>
+                <span>Blood Allocation</span>
+            </button>
+
+        </div>
+
+
+        <!-- ACCOUNT -->
+
+        <div class="nav-section">
+
+            <p class="nav-title">ACCOUNT</p>
+
+            <button class="nav-item"
+                    onclick="showSection('profile', this)">
+                <span class="nav-icon">👤</span>
+                <span>Profile</span>
+            </button>
+
+            <button class="nav-item"
+                    onclick="showSection('settings', this)">
+                <span class="nav-icon">⚙</span>
+                <span>Settings</span>
+            </button>
+
+        </div>
+
+
+        <!-- LOGOUT -->
+
+        <div class="sidebar-bottom">
+
+            <a href="{{ url_for('auth.logout') }}"
+               class="logout-button">
+
+                <span class="nav-icon">↪</span>
+                <span>Logout</span>
+
+            </a>
+
+        </div>
+
+    </aside>
+
+
+    <!-- ================= MAIN CONTENT ================= -->
+
+    <main class="main-content">
+
+
+        <!-- ================= TOP BAR ================= -->
+
+        <header class="topbar">
+
+            <div class="search-container">
+
+                <span class="search-icon">⌕</span>
+
+                <input type="text"
+                       id="globalSearch"
+                       placeholder="Search...">
+
+            </div>
+
+
+            <div class="topbar-right">
+
+                <button class="notification-button">
+                    🔔
+                    <span class="notification-dot"></span>
+                </button>
+
+
+                <div class="user-profile">
+
+                    <div class="user-avatar">
+                        SS
+                    </div>
+
+                    <div class="user-details">
+
+                        <strong>
+                            {{ session.get('name', 'Blood Bank Staff') }}
+                        </strong>
+
+                        <span>Blood Bank Staff</span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <!-- ================================================= -->
+        <!-- ================= DASHBOARD ===================== -->
+        <!-- ================================================= -->
+
+        <section id="dashboard"
+                 class="page-section active-section">
+
+            <div class="page-header">
+
+                <div>
+                    <h1>Welcome, {{ session.get('name', 'Blood Bank Staff') }} 👋</h1>
+
+                    <p>
+                        Here's what's happening with your blood bank today.
+                    </p>
+                </div>
+
+                <div class="date-display">
+                    📅 Today
+                </div>
+
+            </div>
+
+
+            <!-- SUMMARY CARDS -->
+
+            <div class="summary-grid">
+
+                <div class="summary-card">
+
+                    <div class="card-icon blue">
+                        🩸
+                    </div>
+
+                    <div class="card-content">
+
+                        <span>Total Blood Units</span>
+
+                        <h2>{{ total_units }}</h2>
+
+                        <small>Across all blood groups</small>
+
+                    </div>
+
+                </div>
+
+
+                <div class="summary-card">
+
+                    <div class="card-icon green">
+                        ✓
+                    </div>
+
+                    <div class="card-content">
+
+                        <span>Available Units</span>
+
+                        <h2>{{ available_units }}</h2>
+
+                        <small>Ready for allocation</small>
+
+                    </div>
+
+                </div>
+
+
+                <div class="summary-card">
+
+                    <div class="card-icon orange">
+                        !
+                    </div>
+
+                    <div class="card-content">
+
+                        <span>Pending Requests</span>
+
+                        <h2>{{ pending_requests }}</h2>
+
+                        <small>Hospital requests</small>
+
+                    </div>
+
+                </div>
+
+
+                <div class="summary-card">
+
+                    <div class="card-icon purple">
+                        📅
+                    </div>
+
+                    <div class="card-content">
+
+                        <span>Today's Appointments</span>
+
+                        <h2>{{ today_appointments }}</h2>
+
+                        <small>Donor appointments</small>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- DASHBOARD LOWER GRID -->
+
+            <div class="dashboard-grid">
+
+
+                <!-- RECENT DONATIONS -->
+
+                <div class="content-card large-card">
+
+                    <div class="card-header">
+
+                        <div>
+                            <h2>Recent Donations</h2>
+                            <p>Latest blood donations received</p>
+                        </div>
+
+                        <button class="view-button"
+                                onclick="showSection('donations')">
+                            View All
+                        </button>
+
+                    </div>
+
+
+                    <div class="table-container">
+
+                        <table>
+
+                            <thead>
+
+                                <tr>
+                                    <th>Donor ID</th>
+                                    <th>Donor Name</th>
+                                    <th>Blood Group</th>
+                                    <th>Date</th>
+                                    <th>Units</th>
+                                    <th>Status</th>
+                                </tr>
+
+                            </thead>
+
+
+                           <tbody>
+
+{% for donation in recent_donations %}
+
+<tr>
+    <td>{{ donation.donor_id }}</td>
+    <td>{{ donation.full_name }}</td>
+
+    <td>
+        <span class="blood-badge">
+            {{ donation.blood_group }}
+        </span>
+    </td>
+
+    <td>
+        {{ donation.donation_date.strftime('%d %b %Y') if donation.donation_date else '-' }}
+    </td>
+
+    <td>{{ donation.units }}</td>
+
+    <td>
+        {% if donation.status == 'Processed' %}
+            <span class="status-badge success">
+                {{ donation.status }}
+            </span>
+        {% elif donation.status == 'Testing' %}
+            <span class="status-badge warning">
+                {{ donation.status }}
+            </span>
+        {% else %}
+            <span class="status-badge">
+                {{ donation.status }}
+            </span>
+        {% endif %}
+    </td>
+</tr>
+
+{% else %}
+
+<tr>
+    <td colspan="6">No recent donations found.</td>
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+
+                <!-- EMERGENCY REQUESTS -->
+
+                <div class="content-card">
+
+                    <div class="card-header">
+
+                        <div>
+                            <h2>Emergency Requests</h2>
+                            <p>Requests requiring attention</p>
+                        </div>
+
+                    </div>
+
+
+                    <div class="emergency-list">
+
+                        {% for req in emergency_requests %}
+                        <div class="emergency-item"><div class="emergency-icon">!</div><div class="emergency-info"><strong>{{ req.hospital_name }}</strong><span>{{ req.blood_group }} · {{ req.units_required }} units</span></div><span class="urgent-badge">{{ req.urgency }}</span></div>
+                        {% else %}<p>No urgent requests.</p>{% endfor %}
+
+                    </div>
+
+
+                    <button class="full-button"
+                            onclick="showSection('requests')">
+
+                        View All Requests
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================================================= -->
+        <!-- ================= BLOOD INVENTORY =============== -->
+        <!-- ================================================= -->
+
+        <section id="inventory"
+                 class="page-section">
+
+            <div class="page-header">
+
+                <div>
+
+                    <h1>Blood Inventory</h1>
+
+                    <p>
+                        Monitor and manage available blood stock.
+                    </p>
+
+                </div>
+
+                <button class="primary-button"
+                        onclick="openAddUnitModal()">
+
+                    + Add Blood Unit
+
+                </button>
+
+            </div>
+
+
+            <!-- INVENTORY SUMMARY -->
+
+            <div class="summary-grid">
+
+                <div class="summary-card">
+
+                    <div class="card-icon blue">
+                        🩸
+                    </div>
+
+                    <div class="card-content">
+
+                        <span>Total Units</span>
+
+                        <h2>{{ inventory_total_units }}</h2>
+
+                        <small>All blood groups</small>
+
+                    </div>
+
+                </div>
+
+
+                <div class="summary-card">
+
+                    <div class="card-icon green">
+                        ✓
+                    </div>
+
+                    <div class="card-content">
+
+                        <span>Available Units</span>
+
+                        <h2>{{ inventory_available_units }}</h2>
+
+                        <small>Currently available</small>
+
+                    </div>
+
+                </div>
+
+
+                <div class="summary-card">
+
+                    <div class="card-icon orange">
+                        !
+                    </div>
+
+                    <div class="card-content">
+
+                        <span>Low Stock Units</span>
+
+                        <h2>{{ inventory_low_stock_units }}</h2>
+
+                        <small>Needs attention</small>
+
+                    </div>
+
+                </div>
+
+
+                <div class="summary-card">
+
+                    <div class="card-icon purple">
+                        ⏳
+                    </div>
+
+                    <div class="card-content">
+
+                        <span>Expiring Soon</span>
+
+                       <h2>{{ inventory_expiring_soon }}</h2>
+
+                        <small>Within 7 days</small>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- BLOOD STOCK TABLE -->
+
+            <div class="content-card inventory-card">
+
+                <div class="card-header">
+
+                    <div>
+
+                        <h2>Current Blood Stock</h2>
+
+                        <p>
+                            Current inventory by blood group
+                        </p>
+
+                    </div>
+
+
+                    <div class="inventory-filter">
+
+                        <select id="bloodGroupFilter"
+                                onchange="filterInventory()">
+
+                            <option value="all">
+                                All Blood Groups
+                            </option>
+
+                            <option value="A+">A+</option>
+                            <option value="A-">A-</option>
+                            <option value="B+">B+</option>
+                            <option value="B-">B-</option>
+                            <option value="O+">O+</option>
+                            <option value="O-">O-</option>
+                            <option value="AB+">AB+</option>
+                            <option value="AB-">AB-</option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+
+                <div class="table-container">
+
+                    <table id="inventoryTable">
+
+                        <thead>
+
+                            <tr>
+                                <th>Blood Group</th>
+                                <th>Total Units</th>
+                                <th>Available</th>
+                                <th>Reserved</th>
+                                <th>Expiring Soon</th>
+                                <th>Status</th>
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody>
+
+{% for item in inventory_data %}
+
+<tr>
+
+    <td>
+        <span class="blood-badge">
+            {{ item.blood_group }}
+        </span>
+    </td>
+
+    <td>{{ item.total_units }}</td>
+
+    <td>{{ item.available_units }}</td>
+
+    <td>{{ item.reserved_units }}</td>
+
+    <td>{{ item.expiring_soon }}</td>
+
+    <td>
+
+        {% if item.status == "Available" %}
+
+            <span class="status-badge success">
+                Available
+            </span>
+
+        {% elif item.status == "Low Stock" %}
+
+            <span class="status-badge warning">
+                Low Stock
+            </span>
+
+        {% else %}
+
+            <span class="status-badge danger">
+                Critical
+            </span>
+
+        {% endif %}
+
+    </td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+                    </table>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================================================= -->
+        <!-- ================ APPOINTMENTS =================== -->
+        <!-- ================================================= -->
+
+        <section id="appointments"
+                 class="page-section">
+
+            <div class="page-header">
+
+                <div>
+
+                    <h1>Donor Appointments</h1>
+
+                    <p>
+                        Manage today's and upcoming donor appointments.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="content-card">
+
+                <div class="card-header">
+
+                    <div>
+
+                        <h2>Today's Appointments</h2>
+
+                        <p>
+                            Scheduled donor visits
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="table-container">
+
+                    <table>
+
+                        <thead>
+
+                            <tr>
+                                <th>Appointment ID</th>
+                                <th>Donor</th>
+                                <th>Blood Group</th>
+                                <th>Time</th>
+                                <th>Type</th>
+                                <th>Status</th>
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody>
+
+{% for appointment in today_appointments_list %}
+
+<tr>
+
+    <td>
+        {{ appointment.appointment_id }}
+    </td>
+
+    <td>
+        {{ appointment.full_name }}
+    </td>
+
+    <td>
+        <span class="blood-badge">
+            {{ appointment.blood_group }}
+        </span>
+    </td>
+
+    <td>
+        {{ appointment.time_slot }}
+    </td>
+
+    <td>
+        Blood Donation
+    </td>
+
+    <td>
+
+        {% if appointment.status == "Confirmed" %}
+
+            <span class="status-badge success">
+                {{ appointment.status }}
+            </span>
+
+        {% elif appointment.status == "Waiting" %}
+
+            <span class="status-badge warning">
+                {{ appointment.status }}
+            </span>
+
+        {% elif appointment.status == "Cancelled" %}
+
+            <span class="status-badge danger">
+                {{ appointment.status }}
+            </span>
+
+        {% else %}
+
+            <span class="status-badge">
+                {{ appointment.status }}
+            </span>
+
+        {% endif %}
+
+    </td>
+
+</tr>
+
+{% else %}
+
+<tr>
+    <td colspan="6">
+        No appointments scheduled for today.
+    </td>
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================================================= -->
+        <!-- ================= DONATIONS ===================== -->
+        <!-- ================================================= -->
+
+        <section id="donations"
+                 class="page-section">
+
+            <div class="page-header">
+
+                <div>
+
+                    <h1>Donations</h1>
+
+                    <p>
+                        View and manage blood donations received by the bank.
+                    </p>
+
+                </div>
+
+                <button class="primary-button">
+                    + Record Donation
+                </button>
+
+            </div>
+
+
+            <div class="content-card">
+
+                <div class="card-header">
+
+                    <div>
+
+                        <h2>Recent Donations</h2>
+
+                        <p>
+                            Donation records
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="table-container">
+
+                    <table>
+
+                        <thead>
+
+                            <tr>
+                                <th>Donation ID</th>
+                                <th>Donor ID</th>
+                                <th>Donor Name</th>
+                                <th>Blood Group</th>
+                                <th>Units</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody>
+
+    {% for donation in donations_list %}
+
+    <tr>
+
+        <td>{{ donation.donation_id }}</td>
+
+        <td>{{ donation.donor_id }}</td>
+
+        <td>{{ donation.full_name }}</td>
+
+        <td>
+            <span class="blood-group">
+                {{ donation.blood_group }}
+            </span>
+        </td>
+
+        <td>{{ donation.units }}</td>
+
+        <td>
+            {{ donation.donation_date.strftime('%d %b %Y') }}
+        </td>
+
+        <td>
+            <span class="status-badge">
+                {{ donation.status }}
+            </span>
+        </td>
+
+    </tr>
+
+    {% else %}
+
+    <tr>
+        <td colspan="7" style="text-align:center;">
+            No donation records found.
+        </td>
+    </tr>
+
+    {% endfor %}
+
+</tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================================================= -->
+        <!-- ============== HOSPITAL REQUESTS ================ -->
+        <!-- ================================================= -->
+
+        <section id="requests"
+                 class="page-section">
+
+            <div class="page-header">
+
+                <div>
+
+                    <h1>Hospital Requests</h1>
+
+                    <p>
+                        Manage blood requests received from hospitals.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="content-card">
+
+                <div class="card-header">
+
+                    <div>
+
+                        <h2>Pending Hospital Requests</h2>
+
+                        <p>
+                            Requests waiting for processing
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="table-container">
+
+                    <table>
+
+                        <thead>
+
+                            <tr>
+                                <th>Request ID</th>
+                                <th>Hospital</th>
+                                <th>Blood Group</th>
+                                <th>Units</th>
+                                <th>Priority</th>
+                                <th>Requested Date</th>
+                                <th>Status</th>
+                                <th>Allocate</th>
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody>
+
+                            {% for req in requests_list %}
+                            <tr>
+                                <td>{{ req.request_id }}</td>
+                                <td>{{ req.hospital_name }}</td>
+                                <td><span class="blood-badge">{{ req.blood_group }}</span></td>
+                                <td>{{ req.units_required }}</td>
+                                <td>{{ req.urgency }}</td>
+                                <td>{{ req.request_date }}</td>
+                                <td><span class="status-badge warning">{{ req.status }}</span></td>
+                                <td><form onsubmit="return allocateRequest(event, '{{ req.request_id }}')"><select name="unit_id" required><option value="">Choose unit</option>{% for unit in allocatable_units %}<option value="{{ unit.unit_id }}">{{ unit.unit_id }} · {{ unit.blood_group }} · {{ unit.units }} · exp {{ unit.expiry_date }}</option>{% endfor %}</select><button type="submit">Allocate</button></form></td>
+                            </tr>
+                            {% else %}<tr><td colspan="8">No active hospital requests.</td></tr>{% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================================================= -->
+        <!-- ================ BLOOD ALLOCATION ================ -->
+        <!-- ================================================= -->
+
+        <section id="allocation"
+                 class="page-section">
+
+            <div class="page-header">
+
+                <div>
+
+                    <h1>Blood Allocation</h1>
+
+                    <p>
+                        Allocate compatible blood units to hospital requests.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="content-card">
+
+                <div class="card-header">
+
+                    <div>
+
+                        <h2>Recent Allocations</h2>
+
+                        <p>
+                            Blood units allocated to hospitals
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="table-container">
+
+                    <table>
+
+                        <thead>
+
+                            <tr>
+                                <th>Allocation ID</th>
+                                <th>Hospital</th>
+                                <th>Blood Group</th>
+                                <th>Units</th>
+                                <th>Allocated Date</th>
+                                <th>Status</th>
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody>
+
+                            {% for item in allocations_list %}
+                    <tr><td>{{ item.allocation_id }}</td><td>{{ item.hospital_name }}</td><td>{{ item.blood_group }}</td><td>{{ item.units }}</td><td>{{ item.allocation_date }}</td><td>{{ item.status }}</td></tr>
+                            {% else %}<tr><td colspan="6">No allocations recorded.</td></tr>{% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================================================= -->
+        <!-- =================== PROFILE ===================== -->
+        <!-- ================================================= -->
+
+        <section id="profile"
+                 class="page-section">
+
+            <div class="page-header">
+
+                <div>
+
+                    <h1>Profile</h1>
+
+                    <p>
+                        Manage your Blood Bank staff profile.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="profile-card">
+
+                <div class="profile-avatar">
+                    SS
+                </div>
+
+
+                <div class="profile-information">
+
+                    <h2>{{ session.get('name', 'Blood Bank Staff') }}</h2>
+
+                    <p class="profile-role">
+                        Blood Bank Staff
+                    </p>
+
+
+                    <div class="profile-details">
+
+                        <div>
+                            <span>Role</span>
+                            <strong>Blood Bank Staff</strong>
+                        </div>
+
+                        <div>
+                            <span>Email</span>
+                    <strong>{{ staff.email }}</strong>
+                        </div>
+
+                        <div>
+                            <span>Blood Bank</span>
+                    <strong>{{ staff.BankName }}</strong>
+                        </div>
+
+                        <div>
+                            <span>Status</span>
+                    <strong class="active-text">{{ staff.status }}</strong>
+                        </div>
+
+                    </div>
+
+
+                    <button class="primary-button">
+                        Edit Profile
+                    </button>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================================================= -->
+        <!-- =================== SETTINGS ==================== -->
+        <!-- ================================================= -->
+
+        <section id="settings"
+                 class="page-section">
+
+            <div class="page-header">
+
+                <div>
+
+                    <h1>Settings</h1>
+
+                    <p>
+                        Manage your Blood Bank dashboard preferences.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="settings-card">
+
+                <div class="setting-row">
+
+                    <div>
+
+                        <h3>Notifications</h3>
+
+                        <p>
+                            Receive notifications for urgent hospital requests.
+                        </p>
+
+                    </div>
+
+                    <label class="toggle">
+
+                        <input type="checkbox" checked>
+
+                        <span class="slider"></span>
+
+                    </label>
+
+                </div>
+
+
+                <div class="setting-row">
+
+                    <div>
+
+                        <h3>Low Stock Alerts</h3>
+
+                        <p>
+                            Get alerts when blood stock reaches a low level.
+                        </p>
+
+                    </div>
+
+                    <label class="toggle">
+
+                        <input type="checkbox" checked>
+
+                        <span class="slider"></span>
+
+                    </label>
+
+                </div>
+
+
+                <div class="setting-row">
+
+                    <div>
+
+                        <h3>Expiry Alerts</h3>
+
+                        <p>
+                            Receive alerts for blood units approaching expiry.
+                        </p>
+
+                    </div>
+
+                    <label class="toggle">
+
+                        <input type="checkbox" checked>
+
+                        <span class="slider"></span>
+
+                    </label>
+
+                </div>
+
+
+                <div class="setting-row">
+
+                    <div>
+
+                        <h3>Email Updates</h3>
+
+                        <p>
+                            Receive important BloodLink updates by email.
+                        </p>
+
+                    </div>
+
+                    <label class="toggle">
+
+                        <input type="checkbox">
+
+                        <span class="slider"></span>
+
+                    </label>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+    </main>
+
+</div>
+
+
+<!-- ================= ADD BLOOD UNIT MODAL ================= -->
+
+<div id="addUnitModal"
+     class="modal-overlay">
+
+    <div class="modal">
+
+        <div class="modal-header">
+
+            <div>
+
+                <h2>Add Blood Unit</h2>
+
+                <p>
+                    Add a new blood unit to the inventory.
+                </p>
+
+            </div>
+
+            <button class="modal-close"
+                    onclick="closeAddUnitModal()">
+                ×
+            </button>
+
+        </div>
+
+
+        <form onsubmit="addBloodUnit(event)">
+
+            <div class="form-group">
+                <label for="newDonationId">Completed Donation</label>
+                <select id="newDonationId" required>
+                    <option value="">{% if eligible_donations %}Select an unprocessed donation{% else %}No unprocessed completed donations{% endif %}</option>
+                    {% for donation in eligible_donations %}
+                    <option value="{{ donation.donation_id }}">{{ donation.donation_id }} · {{ donation.donation_date }} · {{ donation.units }} units</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+
+                <label>Blood Group</label>
+
+                <select id="newBloodGroup" required>
+
+                    <option value="">Select blood group</option>
+
+                    <option value="A+">A+</option>
+                    <option value="A-">A-</option>
+                    <option value="B+">B+</option>
+                    <option value="B-">B-</option>
+                    <option value="O+">O+</option>
+                    <option value="O-">O-</option>
+                    <option value="AB+">AB+</option>
+                    <option value="AB-">AB-</option>
+
+                </select>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>Number of Units</label>
+
+                <input type="number"
+                       id="newUnits"
+                       min="1"
+                       required>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>Expiry Date</label>
+
+                <input type="date"
+                       id="newExpiryDate"
+                       required>
+
+            </div>
+
+
+            <div class="modal-actions">
+
+                <button type="button"
+                        class="secondary-button"
+                        onclick="closeAddUnitModal()">
+
+                    Cancel
+
+                </button>
+
+                <button type="submit"
+                        class="primary-button">
+
+                    Add Unit
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<script src="{{ url_for('static', filename='js/bloodbank_dashboard.js') }}"></script>
+
+</body>
+</html>
